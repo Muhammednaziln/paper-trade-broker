@@ -1,0 +1,12 @@
+{% extends 'layouts/base_fullscreen.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+        <p class="text-center mt-2 mb-2" > or "<a href="{% url 'login' %}">back to login.</a>".</p>
+
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends 'layouts/core.html'  %}
+{% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/floating-labels.css' %}">
+{% endblock %}
+{% block extra_styles %}{% endblock %}
+
+
+{% block content_wrapper %}
+    <form class="form-signin" method="post" {% block form_params %}{% endblock %}>
+      <div class="text-center mb-4">
+        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">{% block page_title %}Login{% endblock %} </h1>
+        <p>Welcome to <code>PaperTrade</code>, a developer-friendly trading platform where you can place simulated orders with no risk..
+            To access your account, please enter your login details below.</p>
+      </div>
+        {% block content %}
+        {% endblock %}
+        <p class="mt-5 mb-2" >If you don't have an account yet, you can create one by clicking on the "<a href="{% url 'register' %}">Sign up</a>".</p>
+        <p class="mt-1" >If you have forgotten your password, you can reset it by clicking on the "<a href="{% url 'register' %}">Forgot password</a>".</p>
+        <p class="mt-1" >For any assistance or queries, please contact our support team.</p>
+        <p class="mt-2 mb-3 text-muted text-center"> PaperTrade &copy; {% now "Y" %}</p>
+    </form>
+{% endblock %}
+
+{% block scripts %}{% endblock %}
+{% block extra_scripts %}{% endblock %}
+

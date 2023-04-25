@@ -1,0 +1,42 @@
+{% extends 'layouts/core.html'  %}
+{% load static  %}
+
+{% block styles %}
+<link href="{% static 'css/navbar-top.css' %}" rel="stylesheet">
+<link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+{% endblock %}
+{% block extra_styles %}{% endblock %}
+
+
+
+{% block content_wrapper %}
+{% include 'include/header.html' %}
+<div class="container-fluid">
+    <div class="row">
+        {% include 'include/navbar.html' %}
+        <div class="col pt-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            {% block content %}
+            <h1>Hai, this is base.html override { %  block  content  % } </h1>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="{% static 'js/jquery-3.2.1.slim.min.js' %}"><\/script>')</script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endblock %}
+
+{% block extra_scripts %}{% endblock %}

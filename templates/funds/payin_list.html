@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html'  %}
+
+{% block content %}
+<div class="">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="heading-1">
+                        Pay-In Transactions
+                        <a href="{% url 'payin_create' %}" class="btn btn-primary mt-2 float-right ml-2">Recharge Now</a>
+                        <span class="btn {% if request.user.fund_balance < 50 %}btn-danger{% else %}btn-success{% endif %} btn-disabled mt-2 float-right">Current Balance: Rs. {{ request.user.fund_balance }}</span>
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Reference</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for payin in payins %}
+                        <tr>
+                            <td>{{ payin.created_at }}</td>
+                            <td>{{ payin.amount }}</td>
+                            <td>{{ payin.description }}</td>
+                            <td>{{ payin.reference }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="100%">
+                                <div class="alert alert-info">Create Your first trade app to integrate your application.</div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

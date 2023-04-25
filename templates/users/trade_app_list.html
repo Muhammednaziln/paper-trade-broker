@@ -1,0 +1,68 @@
+{% extends 'layouts/base.html'  %}
+
+{% block content %}
+<div class="">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title">Trade App List</h1>
+                </div>
+                <div class="card-body">
+                    {% for app in object_list %}
+                    <table class="table">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>{{ app.application_name }}</th>
+                            <td>
+                                <a class="btn btn-sm btn-info" href="{% url 'trade-app-update' pk=app.pk %}">Change</a>
+                                <a class="btn btn-sm btn-danger" href="{% url 'trade-app-delete' pk=app.pk %}">Remove</a>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Created On</td>
+                            <td>{{ app.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td>API Key</td>
+                            <td><code>{{ app.access_key }}</code></td>
+                        </tr>
+                        <tr>
+                            <td>API Secret</td>
+                            <td><code>{{ app.access_secret }}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Redirect URL</td>
+                            <td><code>{{ app.redirect_url }}</code></td>
+                        </tr>
+                        <tr>
+                            <td>Provide URL as </td>
+                            <td>
+                                Ask your user to login from <br>
+                                <kbd>http://localhost:8000/authentication/login/?api_key={{ app.access_key }}</kbd>
+                                <br>
+                                (Optionally you can add <code>&redirect_to={{ app.redirect_url }}</code> into url with your own domain.)
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    {% empty %}
+                    <div class="alert alert-info">Create Your first trade app to integrate your application.</div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-success btn-sm" href="{% url 'trade-app-create' %}">Create Trade App</a>
+                    <p class="text-muted mt-2">It is better to create separate environments for Local and production with
+                        respective redirect urls. or use <code>redirect_to</code> parameter to override default
+                        redirect url.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
