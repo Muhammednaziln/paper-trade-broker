@@ -1,0 +1,11 @@
+{% for order in page_obj %}
+<div class="list-group-item">
+    {{ order.order_placed_at }} - {{ order.symbol }} - {{ order.transaction_type }}
+</div>
+{% endfor %}
+
+{% if page_obj.has_next %}
+    <button class="btn btn-light btn-block load-more" onclick="loadMoreOrders({{ request.GET.page }}, '{{ pill.GET.status }}')">Load more</button>
+{% endif %}
+
+

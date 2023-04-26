@@ -29,7 +29,7 @@
                         <tbody>
                         {% for symbol in symbols %}
                         <tr>
-                            <td>{{ symbol.symbol }}</td>
+                            <td> <img src="{{ symbol.logo_url }}" width="30"> {{ symbol.symbol }}</td>
                             <td>{{ symbol.display_name }}</td>
                             <td>{{ symbol.industry_name }}</td>
                             <td>{{ symbol.parent_company }}</td>

@@ -135,7 +135,7 @@ class Order(models.Model):
             self._trigger_exchange_executed()
         self.save()
 
-    def _trigger_exchange_executed(self):
+    def _trigger_exchange_executed(self, filled_quantity=0):
         from apps.broking.stock_exchange.models import ExchangeTransaction
         amount = 0
         if self.ORDER_TYPE_CHOICES in [OrderConstants.LIMIT, OrderConstants.SL]:
@@ -159,6 +159,10 @@ class Order(models.Model):
         if self.broker_id is None:
             self.broker_id = Order.generate_key()
         super().save(**kwargs)
+
+    @property
+    def ordered_via(self):
+        return ('API', 'DASHBOARD')[not self.trade_app_id]
 
 
 class OrderStatus(models.Model):

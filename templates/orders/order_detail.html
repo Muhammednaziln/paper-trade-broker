@@ -1,0 +1,162 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block styles %}
+{% endblock %}
+
+{% block extra_styles %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1>OrderSummary</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-sm table-striped text-sm">
+                                <tr>
+                                    <th>SYMBOL</th>
+                                    <td>{{ object.symbol }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Exchange</th>
+                                    <td>{{ object.exchange }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Exchange Type</th>
+                                    <td>{{ object.exchange_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Order Type</th>
+                                    <td>{{ object.order_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Product Type</th>
+                                    <td>{{ object.product_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Transaction Type</th>
+                                    <td>{{ object.transaction_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Validity</th>
+                                    <td>{{ object.validity }}</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-sm table-striped">
+                                <tr>
+                                    <td>Quantity</td>
+                                    <th>{{ object.quantity }}</th>
+                                </tr>
+                                <tr>
+                                    <td>Limit Price</td>
+                                    <th>{{ object.limit_price|default:"-" }}</th>
+                                </tr>
+                                <tr>
+                                    <td>Trigger Price</td>
+                                    <th>{{ object.trigger_price|default:"-" }}</th>
+                                </tr>
+                                <tr>
+                                    <td>Stop Loss Price</td>
+                                    <th>{{ object.stop_loss_price|default:"-" }}</th>
+                                </tr>
+                                <tr>
+                                    <td>Basket Code</td>
+                                    <th>{{ object.basket_code|default:"-" }}</th>
+                                </tr>
+                                <tr>
+                                    <td>AMO Status</td>
+                                    <th>{{ object.is_amo|yesno:"AMO ORDER,MARKET ORDER" }}</th>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <th><span class="badge badge-success">{{ object.order_status }}</span></th>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <form method="post" class="border rounded p-3">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    {{ form.order_status|as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {% if form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        {% for error in form.non_field_errors %}
+                                        {{ error|escape }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    <button class="btn btn-success" type="submit">Update Status</button>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label>
+                                    <p>Net Price: </p>
+                                    <p class="btn btn-warning btn-disabled btn-lg"><span>INR {{ order.amount|default:"0.0" }} </span></p>
+                                </label>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h1>Status Updates</h1>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-striped">
+                        <tr>
+                            <th>Old Status</th>
+                            <th>New Status</th>
+                            <th>Updated Date</th>
+                        </tr>
+                        {% for stat in status_changes %}
+                        <tr>
+                            <td><small class="badge badge-primary">{{ stat.old_status }}</small></td>
+                            <td><small class="badge badge-success">{{ stat.new_status }}</small></td>
+                            <td>{{ stat.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+  (function(){
+    $(document).ready(function() {
+       $('.select').select2()
+    })
+  })()
+
+</script>
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,116 @@
+{% extends 'layouts/base.html' %}
+
+
+{% block content %}
+<div>
+    <div class="row">
+        <div class="col-12 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Orders <a class="btn btn-success btn-sm float-right" href="{% url 'place_order' %}">Place Order</a> </h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        {% if recent_transactions %}
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Quantity</th>
+                                <th>Order Type</th>
+                                <th>Product Type</th>
+                                <th>WEB</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        {% endif %}
+                        <tbody>
+                        {% for txn in recent_transactions %}
+                            <tr>
+                                <td>{{txn.symbol}}  <span class="badge badge-{%  if txn.transaction_type == 'BUY' %}success{% else %}danger{% endif %} float-right">{{txn.transaction_type}}</span></td>
+                                <td>{{ txn.quantity }}  </td>
+                                <td>{{ txn.order_type }}</td>
+                                <th>{{ txn.product_type }}</th>
+                                <td>{{ txn.ordered_via }}</td>
+                                <td>{{ txn.order_status }}</td>
+                                <td><a href="{% url 'orders_detail' pk=txn.id  %}">Update</a></td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="100%"> No Recent Transactions Found! </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>Choose any status</p>
+                            <ul class="nav nav-pills flex-column">
+                                {% for pill in status_pills %}
+                                <li class="nav-item">
+                                    <a class="nav-link{% if forloop.first %} active{% endif %}" href="#{{ pill.status_slug }}" data-toggle="pill">
+                                        {{ pill.status_name }}
+                                        {% if pill.status_count %}
+                                        <span class="badge badge-light float-right">{{ pill.status_count }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-9">
+                            <h3>Order Summary</h3>
+                            <div class="tab-content">
+                                {% for pill in status_pills %}
+                                <div class="tab-pane{% if forloop.first %} active{% endif %}" id="{{ pill.status_slug }}">
+
+                                    {% if pill.status_orders %}
+                                    <div class="list-group mb-3">
+
+                                        {% for order in pill.status_orders %}
+                                            <a href="{% url 'orders_detail' order.pk %}" class="list-group-item list-group-item-action">
+                                                {{ order.order_placed_at }} - {{ order.symbol }} - {{ order.transaction_type }}
+                                            </a>
+                                        {% endfor %}
+
+                                        {% if pill.status_count > 5 %}
+                                            <button class="btn btn-light btn-block load-more" onclick="loadMoreOrders(1, '{{ pill.status_slug }}')">Load more</button>
+                                        {% endif %}
+
+                                    </div>
+                                    {% else %}
+                                        <div class="alert alert-secondary">No orders found with status "{{ pill.status_name|lower }}"</div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_script %}
+<script>
+    window.loadMoreOrders = function (e) {
+        var status = $(e.target).data("status");
+        var page = $(e.target).data("page");
+        $.get("{% url 'orders_list_ajax' %}", { status:status, page: Number(page) + 1}).then(function(r){
+            $('#' + status).html(r.text);
+        })
+    }
+</script>
+{% endblock %}
+
+
+

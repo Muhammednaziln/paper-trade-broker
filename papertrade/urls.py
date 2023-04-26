@@ -23,6 +23,7 @@ urlpatterns = [
     path('authentication/', include('apps.broking.authentication.urls')),
     path('funds/', include('apps.broking.funds.urls')),
     path('broking/', include('apps.broking.urls')),
+    path('orders/', include('apps.broking.orders.urls')),
     path('', include('apps.users.urls')),
     path('admin/', admin.site.urls),
 ]

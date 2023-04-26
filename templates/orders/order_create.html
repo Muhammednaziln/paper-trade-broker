@@ -1,0 +1,137 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block styles %}
+{% endblock %}
+
+{% block extra_styles %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h1>Create Order</h1>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.symbol|as_crispy_field }}
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.exchange|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.exchange_type|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.order_type|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.product_type|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.transaction_type|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.validity|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.quantity|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.limit_price|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.trigger_price|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.stop_loss_price|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.basket_code|as_crispy_field }}
+                </div>
+
+              </div>
+              <div class="col-md-3 col-sm-4">
+                <div class="form-group">
+                  {{ form.is_amo|as_crispy_field }}
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  {% if form.non_field_errors %}
+                      <div class="alert alert-danger">
+                          {% for error in form.non_field_errors %}
+                              {{ error|escape }}
+                          {% endfor %}
+                      </div>
+                  {% endif %}
+                  <button class="btn btn-success" type="submit">Create</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+  (function(){
+    $(document).ready(function() {
+       $('.select').select2()
+    })
+  })()
+
+</script>
+
+{% endblock %}
+
+
+
+
