@@ -136,20 +136,22 @@ class Order(models.Model):
         self.save()
 
     def _trigger_exchange_executed(self, filled_quantity=0):
-        from apps.broking.stock_exchange.models import ExchangeTransaction
+        from apps.broking.stock_exchange.models import ExchangeTransaction, DematAccountEntry
         amount = 0
         if self.ORDER_TYPE_CHOICES in [OrderConstants.LIMIT, OrderConstants.SL]:
             amount = self.limit_price
         else:
-            amount = ltp(self.symbol)
-
+            maps = ltp(self.symbol.symbol)
+            amount = maps[self.symbol.symbol]
         self.amount = amount * self.quantity
-        self.filled_quantity = self.quantity         # TODO : Add partial quantity trigger.
+        self.filled_quantity = self.quantity             # TODO : Add partial quantity trigger.
         if self.exchange_id is None:
             self.exchange_id = Order.generate_key()
+
+        account = DematAccountEntry.get_account_from_order(self)
         et = ExchangeTransaction(
+            account=account,
             order=self,
-            transaction_type=self.transaction_type,
             quantity=self.quantity,
             amount=amount
         )

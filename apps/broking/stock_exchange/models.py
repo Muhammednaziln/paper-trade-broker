@@ -1,5 +1,7 @@
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from apps.broking.stock_exchange.manager import ExchangeTransactionManager
 
@@ -29,17 +31,18 @@ class DematAccountEntry(models.Model):
     def get_account_from_order(cls, order):
         account = None
         try:
-            account, _ = cls.objects.get_or_create(user=order.order_placed_by, symbol=order.symbol)
+            account, _ = cls.objects.get_or_create(user=order.order_placed_by, symbol=order.symbol, defaults={'quantity': 0})
         except MultipleObjectsReturned:
             # There is no way to happen this. still if data got manipulated, We have to handle.
             # Code complexity is not considered as this is a rare situation.
             extra_objects = cls.objects.filter(user=order.order_placed_by, symbol=order.symbol).order_by('id').values_list('id', flat=True)[1:]
             cls.objects.filter(id__in=extra_objects).delete()
             account = cls.objects.get(user=order.order_placed_by, symbol=order.symbol)
-        account.recalculate()
+            account.recalculate()
+        return account
 
     def recalculate(self):
-        self.quantity = self.transactions.all().symbol(self.symbol).aggregate(
+        self.quantity = self.transactions.all().filter(order__symbol=self.symbol).aggregate(
             quantity=models.Sum('quantity')
         )['quantity'] or 0
         self.save()
@@ -52,9 +55,18 @@ class DematAccountEntry(models.Model):
 
 class ExchangeTransaction(models.Model):
     account = models.ForeignKey(DematAccountEntry, on_delete=models.CASCADE, related_name='transactions', verbose_name="Transfer To Account")
-    order = models.ForeignKey('broking.Symbol', on_delete=models.CASCADE)
+    order = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
     quantity = models.IntegerField(help_text="Storing quantity as negative if its a 'SELL' order other vice store as positive.")
     amount = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     objects = ExchangeTransactionManager()
+
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+
+@receiver(post_save, sender=ExchangeTransaction)
+def recalculate_account_quantity(sender, instance, created, **kwargs):
+    if sender == ExchangeTransaction:
+        instance.account.recalculate()
 

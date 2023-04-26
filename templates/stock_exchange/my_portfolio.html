@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>My Portfolio</h1>
+                </div>
+                <div class="card-body">
+                    <div class="list-group mb-3">
+                        {% for entry in shares %}
+                            <a href="#" class="list-group-item list-group-item-action">
+                                {{ entry.symbol }}: {{ entry.quantity }} Nos
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    {% include 'include/pagination.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
