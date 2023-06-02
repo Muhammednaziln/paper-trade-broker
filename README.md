@@ -41,11 +41,15 @@ To get a glimpse of the Paper Trade project's user interface, here are some scre
 These screenshots showcase the various features and functionalities of the application. Please refer to the 
 screenshots directory for more detailed images.
 
-![Trade App](./docs/assets/image-trade.png)
+| Trade App | 
+| ---------------- |
+| ![Trade App](./docs/assets/image-trade.png)  |
 
-![Authentication](./docs/assets/image-login.png)
+| Authentication | Orders | 
+| ---------------- | ---------------- |
+| ![Authentication](./docs/assets/image-login.png) |![Orders](./docs/assets/image-order.png)     |
 
-![Orders](./docs/assets/image-order.png)
+
 
 
 ## Installation and Setup
