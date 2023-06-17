@@ -3,6 +3,8 @@ import os
 from typing import List, Tuple
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from apps.broking.exceptions import OrderStatusPipelineException
 from apps.utilities.trade import ltp
@@ -133,11 +135,18 @@ class Order(models.Model):
         OrderStatus.objects.create(order=self, old_status=old_status, new_status=new_status)
         if new_status == OrderConstants.EXECUTED:
             self._trigger_exchange_executed()
+        elif new_status == OrderConstants.REJECTED_BY_EXCHANGE:
+            self._trigger_exchange_rejected()
         self.save()
+
+    @property
+    def has_next_status(self):
+        return bool(self.ORDER_PIPELINE[self.order_status])
 
     def _trigger_exchange_executed(self, filled_quantity=0):
         from apps.broking.stock_exchange.models import ExchangeTransaction, DematAccountEntry
-        amount = 0
+        from apps.broking.funds.models import TransactionLedger
+
         if self.ORDER_TYPE_CHOICES in [OrderConstants.LIMIT, OrderConstants.SL]:
             amount = self.limit_price
         else:
@@ -148,6 +157,12 @@ class Order(models.Model):
         if self.exchange_id is None:
             self.exchange_id = Order.generate_key()
 
+        tl = TransactionLedger(
+            amount=amount,
+            user=self.order_placed_by,
+            reference=self.exchange_id,
+        )
+
         account = DematAccountEntry.get_account_from_order(self)
         et = ExchangeTransaction(
             account=account,
@@ -156,6 +171,10 @@ class Order(models.Model):
             amount=amount
         )
         et.save()           # to trigger save signal.
+
+    def _trigger_exchange_rejected(self):
+        if self.exchange_id is None:
+            self.exchange_id = Order.generate_key()
 
     def save(self, **kwargs):
         if self.broker_id is None:
@@ -166,6 +185,9 @@ class Order(models.Model):
     def ordered_via(self):
         return ('API', 'DASHBOARD')[not self.trade_app_id]
 
+    def validate_order_input(self):
+        return
+
 
 class OrderStatus(models.Model):
 
@@ -173,6 +195,11 @@ class OrderStatus(models.Model):
     old_status = models.CharField(max_length=20, choices=Order.ORDER_STATUS_CHOICES)
     new_status = models.CharField(max_length=20, choices=Order.ORDER_STATUS_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(post_save, sender=Order)
+def order_validation(instance: Order, **kwargs):
+    instance.validate_order_input()
 
 
 

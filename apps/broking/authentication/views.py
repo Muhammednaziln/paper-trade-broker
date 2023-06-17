@@ -12,7 +12,10 @@ from apps.users.models import TradeApp
 
 
 class LoginView(CoreLoginView):
-
+    """
+    For public login, we expect to have an 'api_key' and optionally a 'state' and a 'redirect_to'.
+    If there is an api key, then the successful login will get redirected to the
+    """
     redirect_authenticated_user = 1
 
     trade_app = False         # using ellipses instead of None.
@@ -41,6 +44,7 @@ class LoginView(CoreLoginView):
             # reusing assigned access_token is not a secure way. still this is just a moke platform
             # always better to take this access toke to generate a JWT.
             redirect_url += "&access_token=" + session.access_token
+            redirect_url += "&state=" + self.request.GET.get('state', '')
             return redirect_url
         return super().get_success_url()
 

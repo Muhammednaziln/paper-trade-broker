@@ -73,4 +73,30 @@ from .config.project import *
 from .config.authentication import *
 from .config.templates import *
 
+MARKET_HOLIDAYS = {  # %d-%b-%Y
+    '26-Jan-2023',
+    '18-Feb-2023',
+    '07-Mar-2023',
+    '30-Mar-2023',
+    '04-Apr-2023',
+    '07-Apr-2023',
+    '14-Apr-2023',
+    '22-Apr-2023',
+    '01-May-2023',
+    '05-May-2023',
+    '28-Jun-2023',
+    '29-Jul-2023',
+    '15-Aug-2023',
+    '16-Aug-2023',
+    '19-Sep-2023',
+    '28-Sep-2023',
+    '02-Oct-2023',
+    '24-Oct-2023',
+    '14-Nov-2023',
+    '27-Nov-2023',
+    '25-Dec-2023',
+}
+SPECIAL_WORKING_HOURS = {
+    '12-Nov-2023': {'from': '18:15', 'to': '19:15'}
+}
 

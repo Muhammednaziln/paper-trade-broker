@@ -25,6 +25,10 @@ urlpatterns = [
     path('broking/', include('apps.broking.urls')),
     path('orders/', include('apps.broking.orders.urls')),
     path('portfolio/', include('apps.broking.stock_exchange.urls')),
+
+    path('api/v1/', include('apps.apis.v1.urls')),
+
+
     path('', include('apps.users.urls')),
     path('admin/', admin.site.urls),
 ]

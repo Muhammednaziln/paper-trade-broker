@@ -1,10 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from django.views.generic import ListView
 from .models import DematAccountEntry, ExchangeTransaction
 
 
-class MyPortfolioView(ListView):
+class MyPortfolioView(LoginRequiredMixin, ListView):
     template_name = 'stock_exchange/my_portfolio.html'
     context_object_name = 'shares'
     paginate_by = 30

@@ -40,10 +40,29 @@
                             <tr>
                                 <td>Provide URL as </td>
                                 <td>
-                                    Ask your user to login from <br>
-                                    <kbd>http://localhost:8000/authentication/login/?api_key={{ app.access_key }}</kbd>
-                                    <br>
-                                    (Optionally you can add <code>&redirect_to={{ app.redirect_url }}</code> into url with your own domain.)
+                                    <p>
+                                        <span>Ask your user to login from</span> <br>
+                                        <kbd>http://localhost:8000/authentication/login/?api_key={{ app.access_key }}</kbd>
+                                    </p>
+                                    <p> Optionally you can make use of these parameters. </p>
+                                    <table class="table mt-2">
+                                        <tr>
+                                            <td>redirect_to</td>
+                                            <td><code>&redirect_to=https://www.example.com/auth/callback/</code></td>
+                                            <td>
+                                                This will redirect to the specific url instead of default given url in the app.
+                                                <br>
+                                                This will help you to debug your application easily.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>state</td>
+                                            <td><code>&state=tx9d90111ku45h8</code></td>
+                                            <td>
+                                                If you need a key to get passed back to you after successful authentication, you can pass it as 'state'
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </tbody>

@@ -24,6 +24,7 @@ class User(AbstractUser):
         self.fund_balance = balance
         self.save()
 
+
 class TradeApp(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     application_name = models.CharField(max_length=32, default='App')
