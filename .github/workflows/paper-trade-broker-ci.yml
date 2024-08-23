@@ -1,6 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [self-hosted,linux]
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -20,6 +31,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t muhammednazil/my-app:latest .
-          docker push muhammednazil/my-app:latest
+          docker build -t muhammednazil/paper-trade-broker:latest .
+          docker push muhammednazil/paper-trade-broker:latest
 
