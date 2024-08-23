@@ -26,6 +26,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Build Stage: Run Django migrations and tests
+      - name: Build the application
+        run: |
+          python manage.py migrate
+          python manage.py test
+
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -37,4 +43,3 @@ jobs:
         run: |
           sudo docker push muhammednazil/paper-trade-broker:latest
 
-~                                                                               
