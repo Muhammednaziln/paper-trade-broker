@@ -50,7 +50,7 @@ jobs:
     steps:
       - name: Deploy to AWS App Runner
         run: |
-          aws apprunner update-service --service-name "paper-trade-broker" \
+          aws apprunner update-service --service-name "arn:aws:iam::730335208092:user/paper-trade-broker" \
             --source-configuration ImageRepositoryType="ECR", ImageRepository={"ImageIdentifier=muhammednazil/paper-trade-broker:latest"} \
             --region ap-south-1
 
