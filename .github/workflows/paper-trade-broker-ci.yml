@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: [self-hosted,linux]
+    runs-on: [self-hosted, linux]
 
     steps:
       - name: Checkout code
@@ -42,15 +42,15 @@ jobs:
       - name: Push Docker image
         run: |
           sudo docker push muhammednazil/paper-trade-broker:latest
-          deploy:
-  needs: build
-  runs-on: [self-hosted, linux]
 
-  steps:
-    - name: Deploy to AWS App Runner
-      run: |
-        aws apprunner update-service --service-name "CICD-selflearn" \
-          --source-configuration ImageRepositoryType="ECR_PUBLIC",ImageRepository={"ImageIdentifier=muhammednazil/paper-trade-broker:latest"} \
-          --region ap-south-1
+  deploy:
+    needs: build
+    runs-on: [self-hosted, linux]
 
+    steps:
+      - name: Deploy to AWS App Runner
+        run: |
+          aws apprunner update-service --service-name "CICD-selflearn" \
+            --source-configuration ImageRepositoryType="ECR", ImageRepository={"ImageIdentifier=muhammednazil/paper-trade-broker:latest"} \
+            --region ap-south-1
 
